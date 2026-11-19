@@ -1,19 +1,22 @@
 
 <?php
 
-$envFile = __DIR__ . '/.env';
+// 1. First, get the API key from Vercel Environment Variables
+$groqApiKey = getenv('GROQ_API_KEY') ?: '';
 
-if (!file_exists($envFile)) {
-    die('Configuration file is missing.');
+// 2. If running locally, read the .env file
+if ($groqApiKey === '') {
+    $envFile = __DIR__ . '/.env';
+
+    if (file_exists($envFile)) {
+        $env = parse_ini_file($envFile, false, INI_SCANNER_RAW);
+
+        if (is_array($env)) {
+            $groqApiKey = $env['GROQ_API_KEY'] ?? '';
+        }
+    }
 }
 
-$env = parse_ini_file($envFile);
-
-$groqApiKey = $env['GROQ_API_KEY'] ?? '';
-
-if (!$groqApiKey) {
-    die('GROQ_API_KEY is not configured.');
-}
-
+// 3. Groq API configuration
 $groqApiUrl = 'https://api.groq.com/openai/v1/chat/completions';
 $groqModel = 'openai/gpt-oss-20b';
