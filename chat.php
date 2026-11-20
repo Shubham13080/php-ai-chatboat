@@ -1,16 +1,10 @@
-
 <?php
-
 header('Content-Type: application/json; charset=utf-8');
 
-// Allow JSON responses with proper HTTP status
 function sendJson($reply, $status = 200) {
     http_response_code($status);
 
-    echo json_encode([
-        'reply' => $reply
-    ], JSON_UNESCAPED_UNICODE);
-
+    echo json_encode(['reply' => $reply]);
     exit;
 }
 
